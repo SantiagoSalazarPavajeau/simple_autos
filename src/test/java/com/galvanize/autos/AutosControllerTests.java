@@ -14,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(AutosController.class) // add controller name
@@ -39,9 +44,10 @@ public class AutosControllerTests {
     @DisplayName("Should return all cars when sending GET request")
     void test_getAll() throws Exception {
         when(autoService.getAllCars()).thenReturn(autoList);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/autos"))
+        mockMvc.perform(get("/api/autos"))
+                .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("", hasSize(2)));
     }
 
 }

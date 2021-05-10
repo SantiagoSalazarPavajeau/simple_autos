@@ -1,8 +1,20 @@
 package com.galvanize.autos;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.*;
+
+@RestController
+
 public class AutosController {
  //GET
+    AutoService autoService;
     // GET:/api/autos  returns list of all autos in db
+    @GetMapping("/api/autos")
+    public List<Auto> getAll(){
+        return autoService.getAllCars();
+    }
     // GET: /api/autos no autos in db returns 204 no content
 
     // GET: /api/autos?color=RED  returns red cars
