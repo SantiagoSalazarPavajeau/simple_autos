@@ -37,6 +37,8 @@ public class AutosControllerTests {
         autoList = new ArrayList<>();
         autoList.add(new Auto("Toyota", "Red"));
         autoList.add(new Auto("Chevy", "Black"));
+        autoList.add(new Auto("Honda", "Red"));
+        autoList.add(new Auto("Chevy", "White"));
     }
 
     @Test
@@ -47,6 +49,22 @@ public class AutosControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("Should return all cars by color")
+    void test_getAllByColor() throws Exception {
+        List<Auto> listByColor = new ArrayList<>();
+        listByColor.add(new Auto("Honda", "Red"));
+        listByColor.add(new Auto("Toyota", "Red"));
+
+        when(autoService.getAllByColor("Red")).thenReturn(listByColor);
+
+        mockMvc.perform(get("/api/autos?color=Red"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+
     }
 
 }

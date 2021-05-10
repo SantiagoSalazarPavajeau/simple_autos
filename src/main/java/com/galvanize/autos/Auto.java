@@ -13,6 +13,10 @@ public class Auto {
         this.color = color;
     }
 
+    public String getColor() {
+        return color;
+    }
+
     public void setVin(int vin) {
         this.vin = vin;
     }

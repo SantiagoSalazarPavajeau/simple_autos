@@ -12,4 +12,14 @@ public class AutoService {
         return autoList;
     }
 
+    public List<Auto> getAllByColor(String color){
+        List<Auto> resultsByColor = new ArrayList<>();
+        for(Auto auto : autoList){
+            if (auto.getColor() == color){
+                resultsByColor.add(auto);
+            }
+        }
+        return resultsByColor;
+    }
+
 }
