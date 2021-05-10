@@ -48,7 +48,7 @@ public class AutosControllerTests {
         mockMvc.perform(get("/api/autos"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(4)));
     }
 
     @Test

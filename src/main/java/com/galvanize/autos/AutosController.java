@@ -1,6 +1,7 @@
 package com.galvanize.autos;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,14 +16,16 @@ public class AutosController {
         this.autoService = autoService;
     }
     // GET:/api/autos  returns list of all autos in db
-    @GetMapping("/api/autos")
-    public List<Auto> getAll(){
-        return autoService.getAllCars();
-    }
 
-    @GetMapping("/api/autos?color={color}")
-    public List<Auto> getAllByColor(@RequestParam String color){
-        return autoService.getAllByColor(color);
+
+    @GetMapping("/api/autos")
+    public List<Auto> searchForCars(@RequestParam(required = false) String color){
+        if(color != null) {
+            return autoService.getAllByColor(color);
+        } else {
+            return autoService.getAllCars();
+        }
+
     }
     // GET: /api/autos no autos in db returns 204 no content
 
