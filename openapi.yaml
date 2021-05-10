@@ -28,8 +28,8 @@ paths:
               $ref: '#/components/schemas/Autos'
         required: true
       responses:
-        '200':
-          description: OK
+        '400':
+          description: Error bad request
     get:
       tags:
         - autos
@@ -37,6 +37,8 @@ paths:
       responses:
         '200':
           description: OK
+        '204':
+          description: No autos found by that vin
   /autos?color={color}}:
     get:
       tags:
@@ -56,6 +58,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autos'
+        '204':
+          description: No autos found by that vin
   /autos?make={make}}:
     get:
       tags:
@@ -75,6 +79,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autos'
+        '204':
+          description: No autos found by that vin
+  /autos?make={make}?color={color}:
+    get:
+      tags:
+        - autos
+      summary: Get all by make and color
+      parameters:
+        - name: make
+          in: path
+          description: return all of certain make
+          required: true
+          schema:
+            type: string
+        - name: color
+          in: path
+          description: return all of certain color
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+        '204':
+          description: No autos found by that vin
   /autos/{vin}:
     get:
       tags:
@@ -95,6 +128,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autos'
+        '204':
+          description: No autos found by that vin
     patch:
       tags:
         - autos
@@ -119,6 +154,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autos'
+        '204':
+          description: No autos found by that vin
+        '400':
+          description: Bad request (no payload, no changes, already done)
     delete:
       tags:
         - autos
@@ -138,6 +177,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Autos'
+        '202':
+          description: Accepted
+        '204':
+          description: No autos found by that vin
 components:
   schemas:
     Autos:
