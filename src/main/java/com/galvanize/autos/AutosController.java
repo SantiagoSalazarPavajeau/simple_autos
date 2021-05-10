@@ -10,6 +10,10 @@ import java.util.*;
 public class AutosController {
  //GET
     AutoService autoService;
+
+    public AutosController(AutoService autoService) {
+        this.autoService = autoService;
+    }
     // GET:/api/autos  returns list of all autos in db
     @GetMapping("/api/autos")
     public List<Auto> getAll(){
