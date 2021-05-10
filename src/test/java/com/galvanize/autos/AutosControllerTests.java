@@ -67,7 +67,7 @@ public class AutosControllerTests {
     }
 
     @Test
-    @DisplayName("Should return all cars by color")
+    @DisplayName("Should return all cars by make")
     void test_getAllByMake() throws Exception {
         List<Auto> listByMake = new ArrayList<>();
         listByMake.add(new Auto("Chevy", "Black"));
@@ -80,4 +80,33 @@ public class AutosControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
+
+    @Test
+    @DisplayName("Should return all cars by make and color")
+    void test_getAllByMakeAndColor() throws Exception {
+        List<Auto> listByMakeAndColor = new ArrayList<>();
+        listByMakeAndColor.add(new Auto("Chevy", "White"));
+
+        when(autoService.getAllByMakeAndColor("White","Chevy")).thenReturn(listByMakeAndColor);
+
+        mockMvc.perform(get("/api/autos?color=White&make=Chevy"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName( "Should return 204 no content if no cars found")
+    void test_SearchForCarsReturn204OnNoneFound() throws Exception {
+        List<Auto> emptyList = new ArrayList<>();
+
+        when(autoService.getAllCars()).thenReturn(emptyList);
+
+        mockMvc.perform(get("/api/autos"))
+                .andExpect(status().isNoContent());
+    }
+
+
+
+
 }

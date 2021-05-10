@@ -1,5 +1,7 @@
 package com.galvanize.autos;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,17 +21,19 @@ public class AutosController {
 
 
     @GetMapping("/api/autos")
-    public List<Auto> searchForCars(@RequestParam(required = false) String color, @RequestParam(required = false) String make){
-        if(color != null & make != null) {
-            return autoService.getAllByColor(color);
-        } else if (color != null) {
-            return autoService.getAllByColor(color);
-        } else if (make != null) {
-            return autoService.getAllByMake(make);
-        } else  {
-            return autoService.getAllCars();
-        }
+    public Object searchForCars(@RequestParam(required = false) String color, @RequestParam(required = false) String make){
 
+        if(color != null & make != null && (autoService.getAllByMakeAndColor(color, make).size() > 0)) {
+            return autoService.getAllByMakeAndColor(color, make);
+        } else if (color != null && (autoService.getAllByColor(color).size() > 0) ) {
+            return autoService.getAllByColor(color);
+        } else if (make != null && (autoService.getAllByMake(make).size() > 0)) {
+            return autoService.getAllByMake(make);
+        } else if(autoService.getAllCars().size() > 0) {
+            return autoService.getAllCars();
+        }else{
+            return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        }
     }
     // GET: /api/autos no autos in db returns 204 no content
 

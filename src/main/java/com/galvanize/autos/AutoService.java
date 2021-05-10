@@ -32,4 +32,13 @@ public class AutoService {
         return resultsByMake;
     }
 
+    public List<Auto> getAllByMakeAndColor(String color, String make) {
+        List<Auto> resultsByMakeAndColor = new ArrayList<>();
+        for(Auto auto : autoList){
+            if (auto.getColor() == color && auto.getMake() == make ){
+                resultsByMakeAndColor.add(auto);
+            }
+        }
+        return resultsByMakeAndColor;
+    }
 }
