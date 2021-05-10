@@ -1,0 +1,154 @@
+openapi: 3.0.1
+info:
+  title: Swagger autos
+  description: 'This is a sample autos API'
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://localhost:8080/v1
+  - url: http://localhost:8080/v1
+tags:
+  - name: Autos
+    description: Everything about cars
+    externalDocs:
+      description: Find out more
+      url: http://localhost:8080
+paths:
+  /autos:
+    post:
+      tags:
+        - autos
+      summary: Create new
+      requestBody:
+        description: Autos object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Autos'
+        required: true
+      responses:
+        '200':
+          description: OK
+    get:
+      tags:
+        - autos
+      summary: Get all
+      responses:
+        '200':
+          description: OK
+  /autos?color={color}}:
+    get:
+      tags:
+        - autos
+      summary: Get all by color
+      parameters:
+        - name: color
+          in: path
+          description: return all of certain color
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+  /autos?make={make}}:
+    get:
+      tags:
+        - autos
+      summary: Get all by make
+      parameters:
+        - name: color
+          in: path
+          description: return all of certain make
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+  /autos/{vin}:
+    get:
+      tags:
+        - autos
+      summary: Get one
+      parameters:
+        - name: vin
+          in: path
+          description: VIN of auto to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+    patch:
+      tags:
+        - autos
+      summary: Edit
+      parameters:
+        - name: vin
+          in: path
+          description: Vin of auto that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Autos'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+    delete:
+      tags:
+        - autos
+      summary: Delete
+      parameters:
+        - name: vin
+          in: path
+          description: Vin of auto that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Autos'
+components:
+  schemas:
+    Autos:
+      type: object
+      properties:
+        name:
+          type: string
+        vin:
+          type: integer
+          format: int64
+        make:
+          type: string
+        color:
+          type: string
