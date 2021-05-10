@@ -64,7 +64,20 @@ public class AutosControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
-
     }
 
+    @Test
+    @DisplayName("Should return all cars by color")
+    void test_getAllByMake() throws Exception {
+        List<Auto> listByMake = new ArrayList<>();
+        listByMake.add(new Auto("Chevy", "Black"));
+        listByMake.add(new Auto("Chevy", "White"));
+
+        when(autoService.getAllByMake("Chevy")).thenReturn(listByMake);
+
+        mockMvc.perform(get("/api/autos?make=Chevy"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
 }

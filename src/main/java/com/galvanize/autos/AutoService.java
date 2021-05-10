@@ -22,4 +22,14 @@ public class AutoService {
         return resultsByColor;
     }
 
+    public List<Auto> getAllByMake(String make){
+        List<Auto> resultsByMake = new ArrayList<>();
+        for(Auto auto : autoList){
+            if (auto.getMake() == make){
+                resultsByMake.add(auto);
+            }
+        }
+        return resultsByMake;
+    }
+
 }

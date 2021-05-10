@@ -19,10 +19,14 @@ public class AutosController {
 
 
     @GetMapping("/api/autos")
-    public List<Auto> searchForCars(@RequestParam(required = false) String color){
-        if(color != null) {
+    public List<Auto> searchForCars(@RequestParam(required = false) String color, @RequestParam(required = false) String make){
+        if(color != null & make != null) {
             return autoService.getAllByColor(color);
-        } else {
+        } else if (color != null) {
+            return autoService.getAllByColor(color);
+        } else if (make != null) {
+            return autoService.getAllByMake(make);
+        } else  {
             return autoService.getAllCars();
         }
 

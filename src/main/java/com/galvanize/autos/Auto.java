@@ -17,6 +17,10 @@ public class Auto {
         return color;
     }
 
+    public String getMake() {
+        return make;
+    }
+
     public void setVin(int vin) {
         this.vin = vin;
     }
