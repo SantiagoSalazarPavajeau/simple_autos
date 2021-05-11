@@ -72,7 +72,12 @@ public class AutosController {
     // DELETE: /api/autos/{vin}  returns 202 , car deleted
     @DeleteMapping("/api/autos/{vin}")
     public ResponseEntity deleteAutoByVin(@PathVariable int vin){
-        autoService.deleteAuto(vin);
+        try{
+            autoService.deleteAuto(vin);
+        } catch (AutoNotFoundException ex){
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.accepted().build(); //202 instead of 200
     }
     // DELETE: /api/autos/{vin}   returns 204 not found
