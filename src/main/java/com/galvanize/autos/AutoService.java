@@ -54,4 +54,7 @@ public class AutoService {
     public Auto updateAuto(int vin, String make, String color) {
         return null;
     }
+
+    public void deleteAuto(int vin) {
+    }
 }

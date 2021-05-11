@@ -47,12 +47,18 @@ public class AutosController {
     public Auto addAuto(@RequestBody Auto auto){
         return autoService.addAuto(auto);
     }
-    // POST: / api/autos returns error message due to bad request (400)
 
+    // GET: /api/autos/{vin}
+
+    // GET: /api/autos/{vin}  returns the requested automobile
+    // GET: /api/autos/{vin}  return no content 204, car not found
     @GetMapping("/api/autos/{vin}")
     public Auto getAuto(@PathVariable int vin) {
         return autoService.getAuto(vin);
     }
+
+    // PATCH: /api/autos/{vin}  returns patched auto
+    // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
     @PatchMapping("/api/autos/{vin}")
     public Auto updateAuto(@PathVariable int vin,
                            @RequestBody UpdateRequest update) {
@@ -62,6 +68,18 @@ public class AutosController {
        return auto;
     }
 
+    // DELETE: /api/autos/{vin}
+    // DELETE: /api/autos/{vin}  returns 202 , car deleted
+    @DeleteMapping("/api/autos/{vin}")
+    public ResponseEntity deleteAutoByVin(@PathVariable int vin){
+        autoService.deleteAuto(vin);
+        return ResponseEntity.accepted().build(); //202 instead of 200
+    }
+    // DELETE: /api/autos/{vin}   returns 204 not found
+
+
+    // POST: / api/autos returns error message due to bad request (400)
+    // PATCH: /api/autos/{vin}  returns 400 bad request when no changes done
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void invalidAuto(InvalidAutoException exception){
@@ -69,18 +87,10 @@ public class AutosController {
     }
 
 
-    // GET: /api/autos/{vin}
 
-    // GET: /api/autos/{vin}  returns the requested automobile
-    // GET: /api/autos/{vin}  return no content 204, car not found
 
-// Patch: /api/autos/{vin}
 
-    // PATCH: /api/autos/{vin}  returns patched auto
-    // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
-    // PATCH: /api/autos/{vin}  returns 400 bad request when no changes done
 
- // DELETE: /api/autos/{vin}
-    // DELETE: /api/autos/{vin}  returns 202 , car deleted
-    // DELETE: /api/autos/{vin}   returns 204 not found
+
+
 }
