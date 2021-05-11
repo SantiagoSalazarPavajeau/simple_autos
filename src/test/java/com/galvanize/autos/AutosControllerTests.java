@@ -14,11 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -147,7 +145,15 @@ public class AutosControllerTests {
                 .andExpect(jsonPath("vin").value(auto.getVin()));
     }
 
+    @Test
+    void test_UpdateCarRequest() throws Exception {
+        Auto auto = new Auto("BMW", "Yellow");
+        when(autoService.updateAuto(anyInt(), anyString(), anyString())).thenReturn(auto);
+        mockMvc.perform(patch("/api/autos/" + auto.getVin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"make\":\"BMW\", \"color\" : \"Blue\" }"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("color").value("Blue"));
 
-
-
+    }
 }

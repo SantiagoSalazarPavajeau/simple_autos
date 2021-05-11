@@ -53,6 +53,14 @@ public class AutosController {
     public Auto getAuto(@PathVariable int vin) {
         return autoService.getAuto(vin);
     }
+    @PatchMapping("/api/autos/{vin}")
+    public Auto updateAuto(@PathVariable int vin,
+                           @RequestBody UpdateRequest update) {
+       Auto auto = autoService.updateAuto(vin, update.getMake(), update.getColor());
+       auto.setColor(update.getColor());
+       auto.setMake(update.getMake());
+       return auto;
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -67,6 +75,7 @@ public class AutosController {
     // GET: /api/autos/{vin}  return no content 204, car not found
 
 // Patch: /api/autos/{vin}
+
     // PATCH: /api/autos/{vin}  returns patched auto
     // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
     // PATCH: /api/autos/{vin}  returns 400 bad request when no changes done

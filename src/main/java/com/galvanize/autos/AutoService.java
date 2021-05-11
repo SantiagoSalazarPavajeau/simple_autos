@@ -49,4 +49,9 @@ public class AutoService {
     public Auto getAuto(int vin) {
         return null;
     }
+
+
+    public Auto updateAuto(int vin, String make, String color) {
+        return null;
+    }
 }
