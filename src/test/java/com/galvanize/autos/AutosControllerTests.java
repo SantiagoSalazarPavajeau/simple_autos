@@ -154,7 +154,6 @@ public class AutosControllerTests {
                 .content("{\"make\":\"BMW\", \"color\" : \"Blue\" }"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("color").value("Blue"));
-
     }
 
     @Test
