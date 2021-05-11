@@ -49,6 +49,11 @@ public class AutosController {
     }
     // POST: / api/autos returns error message due to bad request (400)
 
+    @GetMapping("/api/autos/{vin}")
+    public Auto getAuto(@PathVariable int vin) {
+        return autoService.getAuto(vin);
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void invalidAuto(InvalidAutoException exception){
@@ -57,6 +62,7 @@ public class AutosController {
 
 
     // GET: /api/autos/{vin}
+
     // GET: /api/autos/{vin}  returns the requested automobile
     // GET: /api/autos/{vin}  return no content 204, car not found
 

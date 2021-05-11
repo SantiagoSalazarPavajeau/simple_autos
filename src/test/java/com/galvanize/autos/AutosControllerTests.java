@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -134,7 +135,16 @@ public class AutosControllerTests {
                 .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    @DisplayName("Should return car with vin")
+    void test_ReturnsCarWithVin() throws Exception {
+        Auto auto = new Auto("BMW", "Silver");
+        when(autoService.getAuto(anyInt())).thenReturn(auto);
+        mockMvc.perform(get("/api/autos/" + auto.getVin()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("vin").value(auto.getVin()));
     }
 
 

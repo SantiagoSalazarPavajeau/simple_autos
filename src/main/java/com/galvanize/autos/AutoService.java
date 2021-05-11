@@ -45,4 +45,8 @@ public class AutoService {
     public Auto addAuto(Auto auto) {
         return null;
     }
+
+    public Auto getAuto(int vin) {
+        return null;
+    }
 }
