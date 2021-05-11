@@ -41,4 +41,8 @@ public class AutoService {
         }
         return resultsByMakeAndColor;
     }
+
+    public Auto addAuto(Auto auto) {
+        return null;
+    }
 }

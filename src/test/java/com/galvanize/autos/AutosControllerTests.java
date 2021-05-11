@@ -1,24 +1,27 @@
 package com.galvanize.autos;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(AutosController.class) // add controller name
 public class AutosControllerTests {
@@ -31,6 +34,7 @@ public class AutosControllerTests {
 
     List<Auto> autoList;
 
+    ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
     void setUp() {
@@ -104,6 +108,33 @@ public class AutosControllerTests {
 
         mockMvc.perform(get("/api/autos"))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Creates a new car")
+    void test_createANewCar_andReturnsCar() throws Exception {
+        Auto auto = new Auto("Chevy", "White");
+        when(autoService.addAuto(any(Auto.class))).thenReturn(auto);
+        mockMvc.perform(post("/api/autos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(auto)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("make").value("Chevy"));
+    }
+
+    @Test
+    @DisplayName("Returns 400 with bad request")
+    void test_Returns400OnBadRequest() throws Exception {
+
+        when(autoService.addAuto(any(Auto.class))).thenThrow(InvalidAutoException.class);
+        String json = "{\"make\":\"Chevy\",\"color\":\"White\",\"vin\":0}";
+        mockMvc.perform(post("/api/autos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
     }
 
 
