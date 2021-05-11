@@ -154,7 +154,6 @@ public class AutosControllerTests {
 
         mockMvc.perform(get("/api/autos/" + "10" ))
                 .andExpect(status().isNoContent());
-
     }
 
     @Test
