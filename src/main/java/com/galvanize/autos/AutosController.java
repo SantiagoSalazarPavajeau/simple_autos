@@ -53,19 +53,31 @@ public class AutosController {
     // GET: /api/autos/{vin}  returns the requested automobile
     // GET: /api/autos/{vin}  return no content 204, car not found
     @GetMapping("/api/autos/{vin}")
-    public Auto getAuto(@PathVariable int vin) {
-        return autoService.getAuto(vin);
+    public ResponseEntity<Auto> getAuto(@PathVariable int vin) {
+        try{
+            autoService.getAuto(vin);
+        } catch (AutoNotFoundException ex){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(autoService.getAuto(vin));
     }
 
     // PATCH: /api/autos/{vin}  returns patched auto
     // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
     @PatchMapping("/api/autos/{vin}")
-    public Auto updateAuto(@PathVariable int vin,
+    public ResponseEntity<Auto> updateAuto(@PathVariable int vin,
                            @RequestBody UpdateRequest update) {
-       Auto auto = autoService.updateAuto(vin, update.getMake(), update.getColor());
-       auto.setColor(update.getColor());
-       auto.setMake(update.getMake());
-       return auto;
+        Auto auto;
+        try{
+            auto = autoService.updateAuto(vin, update.getMake(), update.getColor());
+
+        } catch (AutoNotFoundException ex){
+            return ResponseEntity.noContent().build(); //stops if no
+        }
+        auto.setColor(update.getColor());
+        auto.setMake(update.getMake());
+
+       return ResponseEntity.ok(auto);
     }
 
     // DELETE: /api/autos/{vin}

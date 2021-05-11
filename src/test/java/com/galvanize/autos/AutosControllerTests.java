@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -146,6 +147,16 @@ public class AutosControllerTests {
     }
 
     @Test
+    @DisplayName("Should return no content 204 when vin is not found")
+    void test_Returns204NoContentWithVinNotFound() throws Exception {
+
+        when(autoService.getAuto(anyInt())).thenThrow(AutoNotFoundException.class);
+
+        mockMvc.perform(get("/api/autos/" + "10" ))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void test_UpdateCarRequest() throws Exception {
         Auto auto = new Auto("BMW", "Yellow");
         when(autoService.updateAuto(anyInt(), anyString(), anyString())).thenReturn(auto);
@@ -155,6 +166,19 @@ public class AutosControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("color").value("Blue"));
 
+    }
+
+    @Test
+    @DisplayName("On Patch should return no content 204 when vin is not found")
+    void test_updateAuto_return204NoContentOnVinNotFound() throws Exception {
+
+        when(autoService.updateAuto(anyInt(), anyString(), anyString()))
+                .thenThrow(AutoNotFoundException.class);
+
+        mockMvc.perform(patch("/api/autos/" + "10" )
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"make\":\"BMW\", \"color\": \"Blue\" }"))
+                .andExpect(status().isNoContent());
     }
 
     @Test

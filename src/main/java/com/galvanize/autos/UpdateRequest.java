@@ -2,6 +2,8 @@ package com.galvanize.autos;
 
 public class UpdateRequest {
     private String color;
+    private String make;
+
 
     public String getColor() {
         return color;
@@ -19,6 +21,5 @@ public class UpdateRequest {
         this.make = make;
     }
 
-    private String make;
 
 }
