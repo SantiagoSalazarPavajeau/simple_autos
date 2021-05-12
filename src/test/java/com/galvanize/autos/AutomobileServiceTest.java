@@ -12,25 +12,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class AutoServiceTest {
+class AutomobileServiceTest {
 
-    private AutoService autoService;
+    private AutosService autosService;
 
     @Mock
     AutosRepository autosRepository;
 
     @BeforeEach
     void setUp() {
-        autoService = new AutoService(autosRepository);
+        autosService = new AutosService(autosRepository);
     }
 
     @Test
     void getAutos() {
-        Auto auto = new Auto(1967, "Ford", "Mustang", "ABC");
+        Automobile auto = new Automobile(1967, "Ford", "Mustang", "ABC");
         when(autosRepository.findAll()).thenReturn(Arrays.asList(auto));
-        AutoList autoList = autoService.getAutos();
-        assertThat(autoList).isNotNull();
-        assertThat(autoList.isEmpty()).isFalse();
+        AutosList autosList = autosService.getAutos();
+        assertThat(autosList).isNotNull();
+        assertThat(autosList.isEmpty()).isFalse();
     }
 
     @Test

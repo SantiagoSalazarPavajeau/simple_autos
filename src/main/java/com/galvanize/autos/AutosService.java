@@ -1,16 +1,12 @@
 package com.galvanize.autos;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
 @Service
-public class AutoService {
+public class AutosService {
 
 
-    public AutoService(AutosRepository autosRepository) {
+    public AutosService(AutosRepository autosRepository) {
         this.autosRepository = autosRepository;
     }
 
@@ -18,30 +14,31 @@ public class AutoService {
 
 //    List<Auto> autoList = new ArrayList<>();
 
-    public AutoList getAutos(){
+    public AutosList getAutos(){
         // Query: select * from autos;
         // Put that in a list
         // Return a new AutosList with the list
-        return new AutoList(autosRepository.findAll());
-    }
-
-    public AutoList getAutos(String color, String make){
+//
         return null;
     }
 
-    public Auto addAuto(Auto auto) {
+    public AutosList getAutos(String color, String make){
         return null;
     }
 
-    public Auto getAuto(String vin) {
+    public Automobile addAuto(Automobile auto) {
         return null;
     }
 
-    public Auto updateAuto(String vin, String color, String owner) {
+    public Automobile getAuto(String vin) {
         return null;
     }
 
-    public void deleteAuto(int vin) {
+    public Automobile updateAuto(String vin, String color, String owner) {
+        return null;
+    }
+
+    public void deleteAuto(String vin) {
 
     }
 }
