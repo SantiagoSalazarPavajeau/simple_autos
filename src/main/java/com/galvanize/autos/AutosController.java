@@ -39,17 +39,18 @@ public class AutosController {
     }
 
     @GetMapping("/api/autos/{vin}")
-    public ResponseEntity<Automobile> getAuto(@PathVariable String vin) {
-        try{
-            autosService.getAuto(vin);
-        } catch (AutoNotFoundException ex){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(autosService.getAuto(vin));
+    public Automobile getAuto(@PathVariable String vin) {
+        return autosService.getAuto(vin);
     }
+//    public ResponseEntity<Automobile> getAuto(@PathVariable String vin) {
+//        try{
+//            autosService.getAuto(vin);
+//        } catch (AutoNotFoundException ex){
+//            return ResponseEntity.noContent().build();
+//        }
+//        return ResponseEntity.ok(autosService.getAuto(vin));
+//    }
 
-    // PATCH: /api/autos/{vin}  returns patched auto
-    // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
     @PatchMapping("/api/autos/{vin}")
     public ResponseEntity<Automobile> updateAuto(@PathVariable String vin,
                                                  @RequestBody UpdateOwnerRequest update) {
