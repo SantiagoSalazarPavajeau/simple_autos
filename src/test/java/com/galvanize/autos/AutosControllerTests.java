@@ -100,7 +100,7 @@ public class AutosControllerTests {
     void getAuto_withVin_returnsAuto() throws Exception {
         Automobile auto = new Automobile(1967, "ford", "mustang", "AABB7");
         when(autosService.getAuto(anyString())).thenReturn(auto);
-        mockMvc.perform(get("/api/autos"+auto.getVin()))
+        mockMvc.perform(get("/api/autos/"+auto.getVin()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("vin").value(auto.getVin()));
     }
@@ -109,7 +109,7 @@ public class AutosControllerTests {
     void updateAuto_withObject_returnsAuto() throws Exception {
         Automobile auto = new Automobile(1967, "Ford", "mustang", "AABB5");
         when(autosService.updateAuto(anyString(), anyString(), anyString())).thenReturn(auto);
-        mockMvc.perform(patch("/api/autos"+auto.getVin())
+        mockMvc.perform(patch("/api/autos/"+auto.getVin())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content("{\"color\":\"RED\",\"owner\":\"Carina\"}"))
                 .andExpect(status().isOk())
