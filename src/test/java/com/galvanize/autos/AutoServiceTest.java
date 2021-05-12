@@ -3,37 +3,39 @@ package com.galvanize.autos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AutoServiceTest {
 
     private AutoService autoService;
 
+    @Mock
+    AutosRepository autosRepository;
+
     @BeforeEach
     void setUp() {
-        autoService = new AutoService();
+        autoService = new AutoService(autosRepository);
     }
 
     @Test
-    void getAllCars() {
-        AutoList autoList = autoService.getAllCars();
+    void getAutos() {
+        Auto auto = new Auto(1967, "Ford", "Mustang", "ABC");
+        when(autosRepository.findAll()).thenReturn(Arrays.asList(auto));
+        AutoList autoList = autoService.getAutos();
         assertThat(autoList).isNotNull();
+        assertThat(autoList.isEmpty()).isFalse();
     }
 
     @Test
-    void getAllByColor() {
-    }
+    void testGetAutos() {
 
-    @Test
-    void getAllByMake() {
-    }
-
-    @Test
-    void getAllByMakeAndColor() {
     }
 
     @Test
