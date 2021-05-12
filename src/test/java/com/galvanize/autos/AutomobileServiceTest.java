@@ -11,6 +11,7 @@ import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,5 +84,12 @@ class AutomobileServiceTest {
 
     @Test
     void deleteAuto() {
+        Automobile automobile = new Automobile(1967, "Ford", "Mustang","ABC1");
+        automobile.setColor("RED");
+        when(autosRepository.findByVin(anyString()))
+                .thenReturn(java.util.Optional.of(automobile));
+
+        autoService.deleteAuto(automobile.getVin());
+        verify(autosRepository).delete(any(Automobile.class));
     }
 }
