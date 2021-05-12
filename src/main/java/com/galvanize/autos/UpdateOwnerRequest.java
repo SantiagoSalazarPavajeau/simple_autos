@@ -1,8 +1,8 @@
 package com.galvanize.autos;
 
-public class UpdateRequest {
+public class UpdateOwnerRequest {
     private String color;
-    private String make;
+    private String owner;
 
 
     public String getColor() {
@@ -13,12 +13,12 @@ public class UpdateRequest {
         this.color = color;
     }
 
-    public String getMake() {
-        return make;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setMake(String make) {
-        this.make = make;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
 
