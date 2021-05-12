@@ -1,134 +1,94 @@
 package com.galvanize.autos;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@WebMvcTest(AutosController.class) // add controller name
+@WebMvcTest(AutosController.class)
 public class AutosControllerTests {
-
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    AutoService autoService;
-
-    List<Auto> autoList;
+    AutosService autosService;
 
     ObjectMapper mapper = new ObjectMapper();
-
-    @BeforeEach
-    void setUp() {
-        autoList = new ArrayList<>();
-        autoList.add(new Auto("Toyota", "Red"));
-        autoList.add(new Auto("Chevy", "Black"));
-        autoList.add(new Auto("Honda", "Red"));
-        autoList.add(new Auto("Chevy", "White"));
-    }
-
+    // GET: /api/autos
+    // GET:  /api/autos   returns a lit of all autos
     @Test
-    @DisplayName("Should return all cars when sending GET request")
-    void test_getAll() throws Exception {
-        when(autoService.getAllCars()).thenReturn(autoList);
+    void getAuto_noParms_exists_returnsAutosLists() throws Exception {
+        // Arrange
+        List<Automobile> automobiles = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            automobiles.add(new Automobile(1967+i, "Ford", "Mustang", "AABB"+i));
+        }
+        when(autosService.getAutos()).thenReturn(new AutosList(automobiles));
+        // Act
         mockMvc.perform(get("/api/autos"))
                 .andDo(print())
+                // Assert
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(4)));
+                .andExpect(jsonPath("$.automobiles", hasSize(5)));
     }
 
     @Test
-    @DisplayName("Should return all cars by color")
-    void test_getAllByColor() throws Exception {
-        List<Auto> listByColor = new ArrayList<>();
-        listByColor.add(new Auto("Honda", "Red"));
-        listByColor.add(new Auto("Toyota", "Red"));
-
-        when(autoService.getAllByColor("Red")).thenReturn(listByColor);
-
-        mockMvc.perform(get("/api/autos?color=Red"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
-    }
-
-    @Test
-    @DisplayName("Should return all cars by make")
-    void test_getAllByMake() throws Exception {
-        List<Auto> listByMake = new ArrayList<>();
-        listByMake.add(new Auto("Chevy", "Black"));
-        listByMake.add(new Auto("Chevy", "White"));
-
-        when(autoService.getAllByMake("Chevy")).thenReturn(listByMake);
-
-        mockMvc.perform(get("/api/autos?make=Chevy"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
-    }
-
-    @Test
-    @DisplayName("Should return all cars by make and color")
-    void test_getAllByMakeAndColor() throws Exception {
-        List<Auto> listByMakeAndColor = new ArrayList<>();
-        listByMakeAndColor.add(new Auto("Chevy", "White"));
-
-        when(autoService.getAllByMakeAndColor("White","Chevy")).thenReturn(listByMakeAndColor);
-
-        mockMvc.perform(get("/api/autos?color=White&make=Chevy"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
-    }
-
-    @Test
-    @DisplayName( "Should return 204 no content if no cars found")
-    void test_SearchForCarsReturn204OnNoneFound() throws Exception {
-        List<Auto> emptyList = new ArrayList<>();
-
-        when(autoService.getAllCars()).thenReturn(emptyList);
-
+    void getAutos_noParms_non_returnsNoContent() throws Exception {
+        when(autosService.getAutos()).thenReturn(new AutosList());
         mockMvc.perform(get("/api/autos"))
+                .andDo(print())
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @DisplayName("Creates a new car")
-    void test_createANewCar_andReturnsCar() throws Exception {
-        Auto auto = new Auto("Chevy", "White");
-        when(autoService.addAuto(any(Auto.class))).thenReturn(auto);
+    void getAutos_searchParms_exists_ReturnsAutosList() throws Exception {
+        List<Automobile> automobiles = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            automobiles.add(new Automobile(1967+i, "Ford", "Mustang", "AABB"+i));
+        }
+        when(autosService.getAutos(anyString(), anyString())).thenReturn(new AutosList(automobiles));
+        mockMvc.perform(get("/api/autos?color=RED&make=Form"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.automobiles", hasSize(5)));
+    }
+
+    @Test
+    void addAuto_valid_returnsAuto() throws Exception {
+        Automobile auto = new Automobile(1967, "ford", "mustang", "ABC123");
+      //  String json = "{\"year\":1967,\"make\":\"Ford\",\"model\":\"Mustang\",\"color\":null,\"owner\":null,\"vin\":\"AABBCC\"}";
+        when(autosService.addAuto(any(Automobile.class))).thenReturn(auto);
+
         mockMvc.perform(post("/api/autos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(auto)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("make").value("Chevy"));
+                .andExpect(jsonPath("make").value("ford"));
     }
 
     @Test
-    @DisplayName("Returns 400 with bad request")
-    void test_Returns400OnBadRequest() throws Exception {
+    void addAuto_badRequest_returns400() throws Exception {
+        String json = "{\"year\":1967,\"make\":\"Ford\",\"model\":\"Mustang\",\"color\":null,\"owner\":null,\"vin\":\"AABBCC\"}";
+        when(autosService.addAuto(any(Automobile.class))).thenThrow(InvalidAutoException.class);
 
-        when(autoService.addAuto(any(Auto.class))).thenThrow(InvalidAutoException.class);
-        String json = "{\"make\":\"Chevy\",\"color\":\"White\",\"vin\":0}";
         mockMvc.perform(post("/api/autos")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
@@ -137,64 +97,41 @@ public class AutosControllerTests {
     }
 
     @Test
-    @DisplayName("Should return car with vin")
-    void test_ReturnsCarWithVin() throws Exception {
-        Auto auto = new Auto("BMW", "Silver");
-        when(autoService.getAuto(anyInt())).thenReturn(auto);
-        mockMvc.perform(get("/api/autos/" + auto.getVin()))
+    void getAuto_withVin_returnsAuto() throws Exception {
+        Automobile auto = new Automobile(1967, "ford", "mustang", "ABC123");
+        when(autosService.getAuto(anyString())).thenReturn(auto);
+        mockMvc.perform(get("/api/autos"+auto.getVin()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("vin").value(auto.getVin()));
     }
 
     @Test
-    @DisplayName("Should return no content 204 when vin is not found")
-    void test_Returns204NoContentWithVinNotFound() throws Exception {
-
-        when(autoService.getAuto(anyInt())).thenThrow(AutoNotFoundException.class);
-
-        mockMvc.perform(get("/api/autos/" + "10" ))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void test_UpdateCarRequest() throws Exception {
-        Auto auto = new Auto("BMW", "Yellow");
-        when(autoService.updateAuto(anyInt(), anyString(), anyString())).thenReturn(auto);
-        mockMvc.perform(patch("/api/autos/" + auto.getVin())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"make\":\"BMW\", \"color\" : \"Blue\" }"))
+    void updateAuto_withObject_returnsAuto() throws Exception {
+        Automobile auto = new Automobile(1967, "Ford", "mustang", "ABC123");
+        when(autosService.updateAuto(anyString(), anyString(), anyString())).thenReturn(auto);
+        mockMvc.perform(patch("/api/autos"+auto.getVin())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"color\":\"RED\",\"owner\":\"Carina\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("color").value("Blue"));
+                .andExpect(jsonPath("color").value("RED"))
+                .andExpect(jsonPath("owner").value("Carina"));
     }
 
     @Test
-    @DisplayName("On Patch should return no content 204 when vin is not found")
-    void test_updateAuto_return204NoContentOnVinNotFound() throws Exception {
+    void deleteAuto_withVin_exists_returns202() throws Exception {
 
-        when(autoService.updateAuto(anyInt(), anyString(), anyString()))
-                .thenThrow(AutoNotFoundException.class);
-
-        mockMvc.perform(patch("/api/autos/" + "10" )
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"make\":\"BMW\", \"color\": \"Blue\" }"))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void test_DeleteCarWithVin() throws Exception {
-        mockMvc.perform(delete("/api/autos/1"))
+        mockMvc.perform(delete("/api/autos/AABBCC"))
                 .andExpect(status().isAccepted());
-
-        verify(autoService).deleteAuto(anyInt()); // void method called
+        verify(autosService).deleteAuto(anyString());
     }
 
     @Test
-    void test_Delete_VinNotFound_returnsNoContent() throws Exception {
-        doThrow(new AutoNotFoundException()).when(autoService).deleteAuto(anyInt());
-
-        mockMvc.perform(delete("/api/autos/1"))
+    void deleteAuto_withVin_notExists_returnsNoContent() throws Exception {
+        doThrow(new AutoNotFoundException()).when(autosService).deleteAuto(anyString())
+        mockMvc.perform(delete("/api/autos/AABBCC"))
                 .andExpect(status().isNoContent());
     }
 
 
 }
+

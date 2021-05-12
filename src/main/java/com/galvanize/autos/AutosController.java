@@ -4,15 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
 @RestController
 public class AutosController {
  //GET
-    AutoService autoService;
+    AutosService autosService;
 
-    public AutosController(AutoService autoService) {
-        this.autoService = autoService;
+    public AutosController(AutosService autosService) {
+        this.autosService = autosService;
     }
     // GET:/api/autos  returns list of all autos in db
     // GET: /api/autos no autos in db returns 204 no content
@@ -21,61 +19,49 @@ public class AutosController {
     // GET: / api/autos?make=Ford&color=GREEN returns green fords
     // GET: / api/autos?make=Ford&color=GREEN  no autos returns 204
     @GetMapping("/api/autos")
-    public Object searchForCars(@RequestParam(required = false) String color,
-                                @RequestParam(required = false) String make){
+    public ResponseEntity<AutosList> getAutos(@RequestParam (required = false) String color,
+                                              @RequestParam ( required = false) String make) {
+        AutosList autosList;
 
-        if(color != null & make != null && (autoService.getAllByMakeAndColor(color, make).size() > 0)) {
-            return autoService.getAllByMakeAndColor(color, make);
-        } else if (color != null && (autoService.getAllByColor(color).size() > 0) ) {
-            return autoService.getAllByColor(color);
-        } else if (make != null && (autoService.getAllByMake(make).size() > 0)) {
-            return autoService.getAllByMake(make);
-        } else if(autoService.getAllCars().size() > 0) {
-            return autoService.getAllCars();
+        if(color == null && make == null){
+            autosList = autosService.getAutos();
         }else{
-            return ResponseEntity.noContent().build();
+            autosList = autosService.getAutos(color, make);
         }
-
+        return autosList.isEmpty() ? ResponseEntity.noContent().build() :
+                ResponseEntity.ok(autosList);
     }
-
-
-
-
  //POST
     // POST: /api/autos   returns created car
     @PostMapping("/api/autos")
-    public Auto addAuto(@RequestBody Auto auto){
-        return autoService.addAuto(auto);
+    public Automobile addAuto(@RequestBody Automobile auto){
+        return autosService.addAuto(auto);
     }
 
-    // GET: /api/autos/{vin}
-
-    // GET: /api/autos/{vin}  returns the requested automobile
-    // GET: /api/autos/{vin}  return no content 204, car not found
     @GetMapping("/api/autos/{vin}")
-    public ResponseEntity<Auto> getAuto(@PathVariable int vin) {
+    public ResponseEntity<Automobile> getAuto(@PathVariable String vin) {
         try{
-            autoService.getAuto(vin);
+            autosService.getAuto(vin);
         } catch (AutoNotFoundException ex){
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(autoService.getAuto(vin));
+        return ResponseEntity.ok(autosService.getAuto(vin));
     }
 
     // PATCH: /api/autos/{vin}  returns patched auto
     // PATCH: /api/autos/{vin}  no autos in db, returns 204 no content
     @PatchMapping("/api/autos/{vin}")
-    public ResponseEntity<Auto> updateAuto(@PathVariable int vin,
-                           @RequestBody UpdateRequest update) {
-        Auto auto;
-        try{
-            auto = autoService.updateAuto(vin, update.getMake(), update.getColor());
-
-        } catch (AutoNotFoundException ex){
-            return ResponseEntity.noContent().build(); //stops if no
-        }
+    public ResponseEntity<Automobile> updateAuto(@PathVariable String vin,
+                                                 @RequestBody UpdateOwnerRequest update) {
+        Automobile auto = autosService.updateAuto(vin, update.getColor(), update.getOwner());
+//        try{
+//            auto = autosService.updateAuto(vin, update.getColor(), update.getOwner());
+//
+//        } catch (AutoNotFoundException ex){
+//            return ResponseEntity.noContent().build(); //stops if no
+//        }
         auto.setColor(update.getColor());
-        auto.setMake(update.getMake());
+        auto.setOwner(update.getOwner());
 
        return ResponseEntity.ok(auto);
     }
@@ -83,23 +69,18 @@ public class AutosController {
     // DELETE: /api/autos/{vin}
     // DELETE: /api/autos/{vin}  returns 202 , car deleted
     @DeleteMapping("/api/autos/{vin}")
-    public ResponseEntity deleteAutoByVin(@PathVariable int vin){
+    public ResponseEntity deleteAutoByVin(@PathVariable String vin){
         try{
-            autoService.deleteAuto(vin);
+            autosService.deleteAuto(vin);
         } catch (AutoNotFoundException ex){
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.accepted().build(); //202 instead of 200
     }
-    // DELETE: /api/autos/{vin}   returns 204 not found
 
-
-    // POST: / api/autos returns error message due to bad request (400)
-    // PATCH: /api/autos/{vin}  returns 400 bad request when no changes done
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void invalidAuto(InvalidAutoException exception){
+    public void invalidAuto(InvalidAutoException e){
 
     }
 
