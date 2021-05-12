@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 public class AutosService {
 
 
-    public AutosService(AutosRepository autosRepository) {
-        this.autosRepository = autosRepository;
-    }
+//    public AutosService(AutosRepository autosRepository) {
+//        this.autosRepository = autosRepository;
+//    }
 
-    AutosRepository autosRepository;
+//    AutosRepository autosRepository;
 
 //    List<Auto> autoList = new ArrayList<>();
 
