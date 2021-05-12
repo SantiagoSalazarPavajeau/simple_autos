@@ -70,6 +70,15 @@ class AutomobileServiceTest {
 
     @Test
     void updateAuto() {
+        Automobile automobile = new Automobile(1967, "Ford", "Mustang","ABC1");
+        automobile.setColor("RED");
+        when(autosRepository.findByVin(anyString()))
+                .thenReturn(java.util.Optional.of(automobile));
+        when(autosRepository.save(any(Automobile.class)))
+                .thenReturn(automobile);
+        Automobile auto = autoService.updateAuto(automobile.getVin(), "PURPLE", "ANYONE");
+        assertThat(auto).isNotNull();
+        assertThat(auto.getVin()).isEqualTo(automobile.getVin());
     }
 
     @Test
