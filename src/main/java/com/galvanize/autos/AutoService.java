@@ -6,20 +6,15 @@ import java.util.*;
 
 @Component
 public class AutoService {
+
     List<Auto> autoList = new ArrayList<>();
 
-    public List<Auto> getAllCars(){
-        return autoList;
+    public AutoList getAllCars(){
+        return null;
     }
 
     public List<Auto> getAllByColor(String color){
-        List<Auto> resultsByColor = new ArrayList<>();
-        for(Auto auto : autoList){
-            if (auto.getColor() == color){
-                resultsByColor.add(auto);
-            }
-        }
-        return resultsByColor;
+        return null;
     }
 
     public List<Auto> getAllByMake(String make){
