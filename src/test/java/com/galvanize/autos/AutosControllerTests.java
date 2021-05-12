@@ -127,7 +127,7 @@ public class AutosControllerTests {
 
     @Test
     void deleteAuto_withVin_notExists_returnsNoContent() throws Exception {
-        doThrow(new AutoNotFoundException()).when(autosService).deleteAuto(anyString())
+        doThrow(new AutoNotFoundException()).when(autosService).deleteAuto(anyString());
         mockMvc.perform(delete("/api/autos/AABBCC"))
                 .andExpect(status().isNoContent());
     }
