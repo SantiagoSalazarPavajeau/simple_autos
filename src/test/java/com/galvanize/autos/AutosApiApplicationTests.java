@@ -66,6 +66,22 @@ class AutosApiApplicationTests {
     }
 
     @Test
+    void getAutos_search_returnsAutosList() {
+        int seq = r.nextInt(50);
+        String color = testAutos.get(seq).getColor();
+        String make = testAutos.get(seq).getMake();
+        ResponseEntity<AutosList> response = restTemplate.getForEntity(
+                String.format("/api/autos?color=%s&make=%s", color,make), AutosList.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().isEmpty()).isFalse();
+        assertThat(response.getBody().getAutomobiles().size()).isGreaterThanOrEqualTo(1);
+
+        for(Automobile auto: response.getBody().getAutomobiles()){
+            System.out.println(auto);
+        }
+    }
+
+    @Test
 	void contextLoads() {
 	}
 
