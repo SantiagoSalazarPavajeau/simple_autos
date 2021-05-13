@@ -17,3 +17,15 @@ test:
   artifacts:
     paths:
       - build/test-results/test/TEST*.xml
+
+codeCoverage:
+  image: adoptopenjdk:11
+  needs:
+    - build-my-project
+  stage: test
+  script:
+    ./gradlew jacocoTestCoverageVerification
+  allow_failure: true
+  artifacts:
+    paths:
+      - build/reports/jacoco/**
