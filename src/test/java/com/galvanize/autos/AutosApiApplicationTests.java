@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +78,29 @@ class AutosApiApplicationTests {
         for(Automobile auto: response.getBody().getAutomobiles()){
             System.out.println(auto);
         }
+    }
+
+    @Test
+    void addAuto_returnsNewAutoDetails() {
+        //Arrange - Setup
+        Automobile automobile = new Automobile();
+        automobile.setVin("AABBCC123");
+        automobile.setYear(1997);
+        automobile.setMake("BMW");
+        automobile.setModel("E36");
+        automobile.setColor("White");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<Automobile> request = new HttpEntity<>(automobile, headers);
+
+        //ACT - Exec
+        ResponseEntity<Automobile> response = restTemplate.postForEntity("/api/autos", request, Automobile.class);
+
+        // Assert
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getVin()).isEqualTo(automobile.getVin());
+
     }
 
     @Test
