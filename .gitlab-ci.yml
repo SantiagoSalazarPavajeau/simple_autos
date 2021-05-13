@@ -21,7 +21,7 @@ test:
 codeCoverage:
   image: adoptopenjdk:11
   needs:
-    - build-my-project
+    - build
   stage: test
   script:
     ./gradlew jacocoTestCoverageVerification
