@@ -183,15 +183,57 @@ paths:
           description: No autos found by that vin
 components:
   schemas:
-    Autos:
+    automobile:
+      description: a single automobile
       type: object
       properties:
-        name:
-          type: string
-        vin:
+        year:
           type: integer
-          format: int64
+          description: Model year
+          example: 1967
         make:
           type: string
+          description: Manufacturer
+          example: Ford
+        model:
+          type: string
+          description: Model Name or Designation
+          example: Mustang
         color:
+          type: string
+          description: Actual color of the vehicle
+          example: RED
+        owner:
+          type: string
+          description: Name of the owner
+          example: John Doe
+        vin:
+          type: string
+          description: vehicle identification number
+          example: 7F03Z01025
+      required:
+        - year
+        - make
+        - model
+        - vin
+    autos-list:
+      description: List of automobiles
+      type: object
+      properties:
+        automobiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/automobile'
+    update-auto:
+      description: Updatable fields of a car
+      type: object
+      properties:
+        color:
+          type: string
+        owner:
+          type: string
+    auto-not-found-exception:
+      type: object
+      properties:
+        message:
           type: string
