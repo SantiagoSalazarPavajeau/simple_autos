@@ -32,15 +32,15 @@ class AutosApiApplicationTests {
     void setUp() {
         this.testAutos = new ArrayList<>();
         Automobile auto;
-        String[] colors = {"ROOT BEER", "MAGENTA", "AMBER", "ORANGE", "YELLOW"};
+        String[] colors = {"ROOT BEER", "MAGENTA", "AMBER", "ORANGE", "YELLOW", "RED", "GREEN", "BLACK", "SILVER", "GREY"};
 
         for(int i = 0; i < 50; i++){
             if(i%3 == 0){
                 auto = new Automobile(1997, "BMW", "M6", "AABBCC"+(i*13));
-                auto.setColor(colors[r.nextInt(5)]);
+                auto.setColor(colors[r.nextInt(10)]);
             }else if( i % 2 == 0 ){
                 auto = new Automobile(1997, "Audi", "TT", "VVBBXX"+(i*12));
-                auto.setColor(colors[r.nextInt(5)]);
+                auto.setColor(colors[r.nextInt(10)]);
             }else{
                 auto = new Automobile(2020, "Bentley", "Continental", "QQZZAA"+(i*12));
             }
