@@ -54,6 +54,8 @@ production:
   image: registry.gitlab.com/galv-vmw-apr-2021/2-simple-autos/simple-autos:latest
   before_script:
     - export IMAGE="$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
+    - aws configure set AWS ACCESS KEY ID:"$AWS_ACCESS_KEY"
+    - aws configure set AWS Secret Access Key:"$AWS_SECRED_ACCESS_KEY"
     - aws configure set region us-west-2
     - aws configure set output json
     - aws eks update-kubeconfig --name "$CLUSTER_NAME"
