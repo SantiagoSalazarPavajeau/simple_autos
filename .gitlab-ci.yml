@@ -4,6 +4,7 @@ stages:
   - build
   - test
   - docker
+  - deploy
 build:
   stage: build
   script:
@@ -47,3 +48,17 @@ docker:
     - docker push "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
     - docker tag "$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID" "$CI_REGISTRY_IMAGE":"latest"
     - docker push "$CI_REGISTRY_IMAGE":"latest"
+
+production:
+  stage: deploy
+  image: registry.gitlab.com/galvanize-labs/instructors/aws-kubernetes-cluster/base-aws-eks-image:latest
+  before_script:
+    - export IMAGE="$CI_REGISTRY_IMAGE":"$CI_PIPELINE_IID"
+    - aws configure set region us-west-2
+    - aws configure set output json
+    - aws eks update-kubeconfig --name "$CLUSTER_NAME"
+    - aws sts get-caller-identity
+
+  script:
+    - envsubst < autos-deploy.yaml | kubectl apply -f -
+    - kubectl apply -f autos-service.yaml
