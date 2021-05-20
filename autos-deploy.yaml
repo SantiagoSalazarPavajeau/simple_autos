@@ -22,10 +22,10 @@ spec:
             - name: DB_HOST
               value: 52.26.72.203
             - name: DB_NAME
-              value: my_cool_db
+              value: czhang
             - name: DB_USER
-              value: my_user
+              value: czhang_user
             - name: DB_PWD
-              value: my_user_pwd
+              value: 7wN6ju-agXGP9-+
       imagePullSecrets: # Be sure the token name matches what you created on K8s
         - name: cz-autos
