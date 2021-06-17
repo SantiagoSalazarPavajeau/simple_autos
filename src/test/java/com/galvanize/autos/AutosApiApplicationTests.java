@@ -56,7 +56,6 @@ class AutosApiApplicationTests {
 
     @Test
     void getAutos_exists_returnsAutosList(){
-        //make call to restTemplate through random port
         ResponseEntity<AutosList> response = restTemplate.getForEntity("/api/autos", AutosList.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
@@ -84,29 +83,21 @@ class AutosApiApplicationTests {
 
     @Test
     void addAuto_returnsNewAutoDetails() {
-        //Arrange - Setup
         Automobile automobile = new Automobile();
         automobile.setVin("AABBCC123");
         automobile.setYear(1997);
         automobile.setMake("BMW");
         automobile.setModel("E36");
         automobile.setColor("White");
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<Automobile> request = new HttpEntity<>(automobile, headers);
-
-        //ACT - Exec
         ResponseEntity<Automobile> response = restTemplate.postForEntity("/api/autos", request, Automobile.class);
-
-        // Assert
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getVin()).isEqualTo(automobile.getVin());
-
     }
 
     @Test
 	void contextLoads() {
 	}
-
 }

@@ -32,17 +32,14 @@ public class AutosControllerTests {
     AutosService autosService;
 
     ObjectMapper mapper = new ObjectMapper();
-    // GET: /api/autos
-    // GET:  /api/autos   returns a lit of all autos
+
     @Test
     void getAuto_noParms_exists_returnsAutosLists() throws Exception {
-        // Arrange
         List<Automobile> automobiles = new ArrayList<>();
         for(int i = 0; i < 5; i++) {
             automobiles.add(new Automobile(1967+i, "Ford", "Mustang", "AABB"+i));
         }
         when(autosService.getAutos()).thenReturn(new AutosList(automobiles));
-        // Act
         mockMvc.perform(get("/api/autos"))
                 .andDo(print())
                 // Assert
@@ -73,7 +70,6 @@ public class AutosControllerTests {
     @Test
     void addAuto_valid_returnsAuto() throws Exception {
         Automobile auto = new Automobile(1967, "ford", "mustang", "ABC123");
-      //  String json = "{\"year\":1967,\"make\":\"Ford\",\"model\":\"Mustang\",\"color\":null,\"owner\":null,\"vin\":\"AABBCC\"}";
         when(autosService.addAuto(any(Automobile.class))).thenReturn(auto);
 
         mockMvc.perform(post("/api/autos")
@@ -131,7 +127,5 @@ public class AutosControllerTests {
         mockMvc.perform(delete("/api/autos/AABBCC"))
                 .andExpect(status().isNoContent());
     }
-
-
 }
 

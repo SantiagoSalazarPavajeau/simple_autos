@@ -115,5 +115,4 @@ public class Automobile {
     public int hashCode() {
         return Objects.hash(year, make, model, color, owner, vin);
     }
-
 }

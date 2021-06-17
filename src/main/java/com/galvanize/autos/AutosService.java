@@ -15,9 +15,6 @@ public class AutosService {
     }
 
     public AutosList getAutos(){
-        // Query: select * from autos;
-        // Put that in a list
-        // Return a new AutosList with the list
         return new AutosList(autosRepository.findAll());
     }
 
@@ -57,24 +54,3 @@ public class AutosService {
     }
 }
 
-
-//
-//    public List<Auto> getAllByMake(String make){
-//        List<Auto> resultsByMake = new ArrayList<>();
-//        for(Auto auto : autoList){
-//            if (auto.getMake() == make){
-//                resultsByMake.add(auto);
-//            }
-//        }
-//        return resultsByMake;
-//    }
-//
-//    public List<Auto> getAllByMakeAndColor(String color, String make) {
-//        List<Auto> resultsByMakeAndColor = new ArrayList<>();
-//        for(Auto auto : autoList){
-//            if (auto.getColor() == color && auto.getMake() == make ){
-//                resultsByMakeAndColor.add(auto);
-//            }
-//        }
-//        return resultsByMakeAndColor;
-//    }
